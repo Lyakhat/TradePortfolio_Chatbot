@@ -16,14 +16,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger("TradePortfolio_Server")
 
+import threading
+
+def _init_models_in_background():
+    try:
+        logger.info("Initializing embedding model in background...")
+        get_embedding_model()
+        _ = session_manager.get_session("default")
+        logger.info("Background model & session initialization complete.")
+    except Exception as e:
+        logger.error(f"Error during background model initialization: {e}")
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifecycle events for FastAPI application."""
-    logger.info("Initializing embedding model and default session...")
-    get_embedding_model()
-    # Trigger default session initialization if data exists
-    _ = session_manager.get_session("default")
-    logger.info("Server initialization complete.")
+    """Lifecycle events for FastAPI application - non-blocking port binding."""
+    threading.Thread(target=_init_models_in_background, daemon=True).start()
     yield
     logger.info("Shutting down server...")
 
