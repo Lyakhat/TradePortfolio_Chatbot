@@ -6,6 +6,7 @@ from app.api.v1 import api_router
 from app.services.rag_engine import get_embedding_model
 from app.services.session_manager import session_manager
 
+from app.config import ALLOWED_ORIGINS
 from app.middleware.rate_limiter import RateLimitMiddleware
 
 # Configure logging
@@ -35,12 +36,12 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
 
-    # CORS configuration to allow web client integrations
+    # CORS configuration restricted to authorized frontend origins
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=ALLOWED_ORIGINS,
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["GET", "POST", "OPTIONS"],
         allow_headers=["*"],
     )
 
