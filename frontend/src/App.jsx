@@ -5,13 +5,10 @@ import ChatFeed from './components/ChatFeed';
 import PromptInput from './components/PromptInput';
 import RawSqlModal from './components/RawSqlModal';
 import TablePreviewModal from './components/TablePreviewModal';
-import { fetchHealth, fetchSchema, fetchSamples, uploadDatasets, askQuestion } from './api/client';
+import { fetchHealth, fetchSchema, fetchSamples, askQuestion } from './api/client';
 
 export default function App() {
-  const [sessions, setSessions] = useState([
-    { id: 'default', name: 'Default Portfolio (Holdings & Trades)' }
-  ]);
-  const [activeSessionId, setActiveSessionId] = useState('default');
+  const activeSessionId = 'default';
   const [schema, setSchema] = useState(null);
   const [samples, setSamples] = useState(null);
   const [health, setHealth] = useState(null);
@@ -52,18 +49,6 @@ export default function App() {
     } catch (err) {
       console.error('Failed to load session metadata:', err);
     }
-  };
-
-  const handleUploadSuccess = async (files) => {
-    const result = await uploadDatasets(files);
-    const newSession = {
-      id: result.session_id,
-      name: `Upload (${result.tables.map(t => t.table_name).join(', ')})`
-    };
-    setSessions(prev => [newSession, ...prev]);
-    setActiveSessionId(result.session_id);
-    await loadSessionData(result.session_id);
-    return result;
   };
 
   const handleSendMessage = async (text) => {
@@ -107,7 +92,7 @@ export default function App() {
       const errorMsg = {
         role: 'assistant',
         execution_status: 'error',
-        formatted_answer: `Connection Error: ${err.message}`,
+        formatted_answer: `Error: ${err.message}`,
         timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, errorMsg]);
@@ -141,12 +126,8 @@ export default function App() {
     }}>
       {/* Left Studio Sidebar */}
       <Sidebar 
-        sessions={sessions}
-        activeSessionId={activeSessionId}
-        onSelectSession={setActiveSessionId}
         schema={schema}
         samples={samples}
-        onUploadSuccess={handleUploadSuccess}
         onPreviewTable={handlePreviewTable}
         health={health}
         onOpenRawSql={() => {

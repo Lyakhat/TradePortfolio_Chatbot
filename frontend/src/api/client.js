@@ -19,26 +19,6 @@ export async function fetchSamples(sessionId = 'default') {
   return res.json();
 }
 
-export async function uploadDatasets(files, sessionId = null) {
-  const formData = new FormData();
-  for (const file of files) {
-    formData.append('files', file);
-  }
-  if (sessionId) {
-    formData.append('session_id', sessionId);
-  }
-
-  const res = await fetch(`${BASE_URL}/datasets/upload`, {
-    method: 'POST',
-    body: formData,
-  });
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.detail || `Upload failed with status ${res.status}`);
-  }
-  return res.json();
-}
-
 export async function askQuestion({ sessionId = 'default', question, temperature = 0.0, topK = 2 }) {
   const res = await fetch(`${BASE_URL}/chat/query`, {
     method: 'POST',

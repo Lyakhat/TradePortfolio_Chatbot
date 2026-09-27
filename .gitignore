@@ -35,6 +35,8 @@ pnpm-debug.log*
 .env.local
 .env.production
 .env.development
+!.env.example
+!*.env.example
 
 # Database & Sessions
 *.db

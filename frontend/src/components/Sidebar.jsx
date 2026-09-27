@@ -1,67 +1,29 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
   Database, 
-  UploadCloud, 
   Table2, 
   Sparkles, 
   FileSpreadsheet, 
   ChevronDown, 
   ChevronRight, 
-  CheckCircle2, 
-  Activity, 
   Cpu, 
-  Layers, 
   Eye, 
-  Plus, 
-  AlertCircle,
   Hash,
   Type
 } from 'lucide-react';
 
 export default function Sidebar({ 
-  sessions, 
-  activeSessionId, 
-  onSelectSession, 
   schema, 
   samples, 
-  onUploadSuccess, 
   onPreviewTable,
   health,
   onOpenRawSql
 }) {
-  const [activeTab, setActiveTab] = useState('schema'); // 'schema' | 'rag' | 'upload'
+  const [activeTab, setActiveTab] = useState('schema'); // 'schema' | 'rag'
   const [expandedTables, setExpandedTables] = useState({ holdings: true, trades: false });
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState(null);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const fileInputRef = useRef(null);
 
   const toggleTable = (tableName) => {
     setExpandedTables(prev => ({ ...prev, [tableName]: !prev[tableName] }));
-  };
-
-  const handleFileChange = (e) => {
-    if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files));
-      setUploadError(null);
-    }
-  };
-
-  const handleUploadSubmit = async () => {
-    if (selectedFiles.length === 0) return;
-    setIsUploading(true);
-    setUploadError(null);
-
-    try {
-      const result = await onUploadSuccess(selectedFiles);
-      setSelectedFiles([]);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      setActiveTab('schema');
-    } catch (err) {
-      setUploadError(err.message || 'Failed to upload CSV files');
-    } finally {
-      setIsUploading(false);
-    }
   };
 
   const tables = schema?.tables || {};
@@ -107,7 +69,7 @@ export default function Sidebar({
               </span>
               <span className="badge badge-emerald" style={{ fontSize: '0.62rem', padding: '1px 6px' }}>v1.0</span>
             </div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>AI Portfolio Intelligence</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Portfolio Analytics Chatbot</div>
           </div>
         </div>
 
@@ -121,58 +83,24 @@ export default function Sidebar({
         </button>
       </div>
 
-      {/* Dataset / Session Selector */}
-      <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--bg-glass-border)', background: 'rgba(0,0,0,0.15)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Active Dataset
-          </span>
-          <button 
-            onClick={() => setActiveTab('upload')}
-            className="btn btn-primary"
-            style={{ padding: '3px 9px', fontSize: '0.72rem', height: '24px', gap: '3px' }}
-            title="Upload new CSV Dataset"
-          >
-            <Plus size={12} strokeWidth={3} /> Upload New
-          </button>
+      {/* Dataset Context Bar */}
+      <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--bg-glass-border)', background: 'rgba(0,0,0,0.15)' }}>
+        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
+          Active Portfolio Dataset
         </div>
-
-        <div style={{ position: 'relative', width: '100%', minWidth: 0 }}>
-          <select 
-            value={activeSessionId} 
-            onChange={(e) => onSelectSession(e.target.value)}
-            style={{
-              width: '100%',
-              minWidth: 0,
-              maxWidth: '100%',
-              background: 'var(--bg-tertiary)',
-              border: '1px solid var(--bg-glass-border)',
-              borderRadius: 'var(--radius-sm)',
-              color: '#FFF',
-              padding: '8px 30px 8px 10px',
-              fontSize: '0.8rem',
-              fontFamily: 'var(--font-mono)',
-              outline: 'none',
-              cursor: 'pointer',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              appearance: 'none',
-              WebkitAppearance: 'none',
-              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.4)'
-            }}
-          >
-            {sessions.map(s => (
-              <option key={s.id} value={s.id} style={{ background: '#0D111A', color: '#FFF' }}>
-                {s.id === 'default' ? '📊 Default (Holdings & Trades)' : `📁 ${s.name}`}
-              </option>
-            ))}
-          </select>
-          <ChevronDown 
-            size={14} 
-            color="var(--text-muted)" 
-            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} 
-          />
+        <div style={{
+          background: 'var(--bg-tertiary)',
+          border: '1px solid var(--bg-glass-border)',
+          borderRadius: 'var(--radius-sm)',
+          padding: '8px 12px',
+          fontSize: '0.8rem',
+          color: 'var(--text-primary)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <Database size={14} color="var(--emerald-primary)" />
+          <span style={{ fontWeight: 600 }}>Holdings & Trades (SQLite)</span>
         </div>
       </div>
 
@@ -190,7 +118,7 @@ export default function Sidebar({
           style={{ flex: 1, padding: '6px 8px', fontSize: '0.75rem', gap: '5px' }}
         >
           <Table2 size={13} color={activeTab === 'schema' ? 'var(--emerald-primary)' : 'currentColor'} /> 
-          Schema ({tableNames.length})
+          Tables ({tableNames.length})
         </button>
         <button 
           onClick={() => setActiveTab('rag')}
@@ -199,14 +127,6 @@ export default function Sidebar({
         >
           <Sparkles size={13} color={activeTab === 'rag' ? 'var(--purple-primary)' : 'currentColor'} /> 
           Query Bank ({samples?.samples?.length || 0})
-        </button>
-        <button 
-          onClick={() => setActiveTab('upload')}
-          className={`btn ${activeTab === 'upload' ? 'btn-secondary' : 'btn-ghost'}`}
-          style={{ flex: 1, padding: '6px 8px', fontSize: '0.75rem', gap: '5px' }}
-        >
-          <UploadCloud size={13} color={activeTab === 'upload' ? 'var(--cyan-primary)' : 'currentColor'} /> 
-          Upload
         </button>
       </div>
 
@@ -224,7 +144,7 @@ export default function Sidebar({
             {tableNames.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '28px 14px', color: 'var(--text-muted)', fontSize: '0.82rem' }}>
                 <FileSpreadsheet size={32} style={{ opacity: 0.3, margin: '0 auto 8px' }} />
-                No tables in this session yet. Upload a CSV to start.
+                Loading database tables...
               </div>
             ) : (
               tableNames.map(tableName => {
@@ -363,89 +283,6 @@ export default function Sidebar({
                 </div>
               ))
             )}
-          </div>
-        )}
-
-        {/* TAB 3: CSV UPLOAD */}
-        {activeTab === 'upload' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>UPLOAD CSV DATASETS</div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-              Upload any CSV files (e.g. portfolios, trades, holdings). The system will automatically prepare tables for instant querying.
-            </p>
-
-            {/* Dropzone Card */}
-            <div 
-              onClick={() => fileInputRef.current?.click()}
-              style={{
-                border: '2px dashed var(--bg-glass-border)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '24px 16px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                background: 'rgba(255,255,255,0.01)',
-                transition: 'all var(--transition-smooth)'
-              }}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                if (e.dataTransfer.files) {
-                  setSelectedFiles(Array.from(e.dataTransfer.files));
-                }
-              }}
-            >
-              <UploadCloud size={32} color="var(--emerald-primary)" style={{ margin: '0 auto 10px' }} />
-              <div style={{ fontSize: '0.84rem', fontWeight: 600, color: '#FFF' }}>
-                Click to browse or drag & drop CSVs
-              </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                Supports .csv files (Holdings, Trades, FX, etc.)
-              </div>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileChange} 
-                multiple 
-                accept=".csv" 
-                style={{ display: 'none' }} 
-              />
-            </div>
-
-            {/* Selected files preview */}
-            {selectedFiles.length > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Selected Files ({selectedFiles.length}):</div>
-                {selectedFiles.map((file, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--bg-tertiary)', borderRadius: '6px', fontSize: '0.78rem' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', color: '#FFF' }}>{file.name}</span>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{(file.size / 1024).toFixed(1)} KB</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {uploadError && (
-              <div style={{ padding: '8px 12px', background: 'var(--rose-surface)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: '6px', fontSize: '0.76rem', color: 'var(--rose-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <AlertCircle size={14} /> {uploadError}
-              </div>
-            )}
-
-            <button 
-              disabled={selectedFiles.length === 0 || isUploading}
-              onClick={handleUploadSubmit}
-              className="btn btn-primary"
-              style={{ width: '100%', padding: '10px' }}
-            >
-              {isUploading ? (
-                <>
-                  <span className="pulse-dot pulse-dot-emerald" /> Ingesting & Processing...
-                </>
-              ) : (
-                <>
-                  <UploadCloud size={16} /> Ingest {selectedFiles.length > 0 ? `${selectedFiles.length} File(s)` : 'Files'}
-                </>
-              )}
-            </button>
           </div>
         )}
 

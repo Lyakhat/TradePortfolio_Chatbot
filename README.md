@@ -1,87 +1,107 @@
-# TradePortfolio Chatbot & CSV Analytics Engine
+# TradePortfolio Chatbot & Financial Analytics Platform
 
-A production-grade, natural language financial portfolio chatbot and dynamic CSV analytics platform powered by **Groq (Llama 3.3 70B)**, **FastAPI**, **SentenceTransformers**, **FAISS Vector RAG**, and a modern **React + Vite** frontend.
-
----
-
-## 🌟 Key Features
-
-- 💬 **Dynamic Natural Language to SQL**: Converts complex conversational finance queries into safe, dialect-correct SQLite queries.
-- ⚡ **RAG-Enhanced SQL Generation**: Retrieves the most relevant valid SQL schema patterns using FAISS vector similarity search and SentenceTransformers (`all-MiniLM-L6-v2`).
-- 🧠 **Continuous Self-Learning Vector Store**: Successfully executed user queries are dynamically indexed into the FAISS vector store to continuously improve future generation accuracy.
-- 🛡️ **Multi-Tier SQL Guardrails**: Enforces read-only `SELECT` queries, protects against SQL injection, disallows destructive queries, and automatically injects query `LIMIT` clauses.
-- 📁 **Dynamic Multi-CSV Ingestion & Session Isolation**: Upload custom CSV datasets (e.g. Holdings, Trades, PnL, Transactions) on the fly with per-session isolated SQLite databases.
-- 💻 **Modern Glassmorphism UI**: Beautiful, responsive React interface with interactive data tables, query execution metrics, schema inspectors, raw SQL execution modals, and real-time backend health monitoring.
+A natural language financial analytics and portfolio querying platform powered by Groq (Llama 3.3 70B), FastAPI, SentenceTransformers, FAISS Vector RAG, and a React + Vite frontend.
 
 ---
 
-## 🏗️ Project Architecture
+## Overview
+
+TradePortfolio Chatbot translates conversational financial questions into dialect-correct SQLite queries over portfolio holdings and trades datasets. It utilizes Retrieval-Augmented Generation (RAG) to find relevant SQL examples and dynamically indexes successfully executed queries to improve future accuracy.
+
+---
+
+## Key Features
+
+- Natural Language to SQL: Converts natural language portfolio queries into executable SQL.
+- RAG-Enhanced Generation: Retrieves the most relevant valid query patterns using FAISS and SentenceTransformers (all-MiniLM-L6-v2).
+- Continuous Self-Learning: Successfully executed queries are dynamically indexed into the vector store.
+- SQL Guardrails: Enforces read-only SELECT statements, prevents SQL injection, and automatically applies query limit constraints.
+- Built-In Rate Limiting: In-memory sliding-window rate limiter per client IP to safeguard LLM tokens and API resources from abuse.
+- Pre-loaded Datasets: Pre-configured with Portfolio Holdings and Historical Trades in an embedded SQLite database.
+- Modern Web Interface: React interface with schema explorer, query knowledge bank, interactive data tables, and custom SQL workbench.
+
+---
+
+## Project Structure
 
 ```
 TradePortfolio_Chatbot/
-├── backend/                  # FastAPI Application & AI RAG Engine
+├── backend/                  # FastAPI Application & AI Engine
 │   ├── app/
 │   │   ├── api/v1/           # API endpoints (chat, datasets, health)
-│   │   ├── schemas/          # Pydantic models & request schemas
-│   │   ├── services/         # Core logic: RAG, DB Manager, SQL Gen & Guard
-│   │   ├── utils/            # Data & SQL formatting helpers
-│   │   ├── config.py         # App configuration & environment loaders
-│   │   └── main.py           # FastAPI entrypoint & lifecycle handlers
+│   │   ├── middleware/       # Rate limiting and security middleware
+│   │   ├── schemas/          # Pydantic request and response schemas
+│   │   ├── services/         # RAG, Database Manager, SQL Generator, SQL Guard
+│   │   ├── utils/            # Data formatting helpers
+│   │   ├── config.py         # Application settings
+│   │   └── main.py           # FastAPI entrypoint
+│   ├── .env.example          # Environment variable template
 │   ├── requirements.txt      # Python dependencies
-│   └── run_server.py         # Backend dev runner (port 8000)
+│   └── run_server.py         # Backend development runner (port 8000)
 │
-├── frontend/                 # React 19 + Vite Web Application
+├── frontend/                 # React 19 + Vite Application
 │   ├── src/
-│   │   ├── api/              # Backend API client integration
-│   │   ├── components/       # UI components (ChatFeed, PromptInput, TablePreviewModal, etc.)
+│   │   ├── api/              # Backend API client
+│   │   ├── components/       # UI components (ChatFeed, Sidebar, Header, Modals)
 │   │   ├── App.jsx           # Main React component
-│   │   └── index.css         # Modern design system & styling
+│   │   └── index.css         # Styling and design system
 │   ├── package.json          # Frontend dependencies
 │   ├── vercel.json           # Vercel SPA routing configuration
-│   └── vite.config.js        # Vite dev server & proxy settings (port 5173)
+│   └── vite.config.js        # Vite dev server configuration (port 5173)
 │
-├── data/                     # Financial datasets & SQLite storage
-│   ├── holdings.csv          # Sample Portfolio Holdings dataset
-│   ├── trades.csv            # Sample Trades dataset
-│   └── portfolio.db          # Embedded SQLite database
+├── data/                     # Financial datasets and SQLite storage
+│   ├── holdings.csv          # Portfolio Holdings dataset
+│   ├── trades.csv            # Historical Trades dataset
+│   └── portfolio.db          # SQLite database
 │
-├── .gitignore                # Git ignore configuration
+├── .gitignore                # Git ignore rules (node_modules, .env, *.db)
 └── README.md                 # Project documentation
 ```
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
-| Layer | Technologies | Role |
-|---|---|---|
-| **Frontend** | React 19, Vite, Lucide Icons, Vanilla CSS Glassmorphism | Interactive Chat UI, Data Tables, & Dataset Manager |
-| **Backend API** | FastAPI, Uvicorn, Pydantic | RESTful API, Lifecycle management & Request validation |
-| **LLM Inference** | Groq API (`llama-3.3-70b-versatile`) | Fast, accurate NL-to-SQL query generation |
-| **Embeddings & RAG** | SentenceTransformers (`all-MiniLM-L6-v2`), FAISS | Semantic similarity matching & Self-learning vector memory |
-| **Database Engine** | SQLite, SQLAlchemy, Pandas, NumPy | Relational analytics, dynamic table creation & query execution |
+- Frontend: React 19, Vite, Lucide Icons, Vanilla CSS
+- Backend API: FastAPI, Uvicorn, Pydantic, Starlette
+- LLM Provider: Groq API (llama-3.3-70b-versatile)
+- Embeddings & Vector Search: SentenceTransformers (all-MiniLM-L6-v2), FAISS
+- Database: SQLite, SQLAlchemy, Pandas, NumPy
 
 ---
 
-## 🚀 Quick Start & Installation
+## Installation and Setup
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 18+ and npm
+- Groq API Key
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/Lyakhat/TradePortfolio_Chatbot.git
 cd TradePortfolio_Chatbot
 ```
 
 ### 2. Configure Environment Variables
-Create a `.env` file in the project root:
+
+Create a `.env` file in the `backend/` directory:
+
 ```env
 GROQ_API_KEY=your_groq_api_key_here
 GROQ_MODEL=llama-3.3-70b-versatile
 EMBEDDING_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
 HOST=127.0.0.1
 PORT=8000
+RATE_LIMIT_PER_MINUTE=30
 ```
 
+A template is also available at `backend/.env.example`.
+
 ### 3. Backend Setup
+
 ```bash
 # Create and activate virtual environment
 python -m venv .venv
@@ -90,44 +110,49 @@ source .venv/bin/activate       # On Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r backend/requirements.txt
 
-# Start FastAPI server
+# Start backend server
 python backend/run_server.py
 ```
-> The API will be available at **`http://127.0.0.1:8000`** with interactive Swagger documentation at **`http://127.0.0.1:8000/docs`**.
+
+The API will run at `http://127.0.0.1:8000` with Swagger UI at `http://127.0.0.1:8000/docs`.
 
 ### 4. Frontend Setup
-In a new terminal window:
+
+In a separate terminal:
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-> The web interface will be available at **`http://localhost:5173`**.
+
+The web application will be accessible at `http://localhost:5173`.
 
 ---
 
-## 📡 API Endpoints Overview
+## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/v1/health` | Service health, model status & Groq API key verification |
-| `POST` | `/api/v1/chat/query` | Natural language question to SQL conversion & execution |
-| `POST` | `/api/v1/chat/execute-raw-sql` | Direct, guarded execution of custom SQL queries |
-| `GET` | `/api/v1/datasets/{session_id}/schema` | Retrieves table schemas, types, row counts & sample preview |
-| `GET` | `/api/v1/datasets/{session_id}/samples` | Retrieves RAG seed examples and self-learned queries |
-| `POST` | `/api/v1/datasets/upload` | Ingests one or more CSV files into an isolated database session |
+| GET | `/api/v1/health` | Health status and model initialization check |
+| POST | `/api/v1/chat/query` | Natural language to SQL query conversion and execution |
+| POST | `/api/v1/chat/execute-raw-sql` | Guarded execution of direct SQL queries |
+| GET | `/api/v1/datasets/{session_id}/schema` | Retrieves table schemas, types, counts, and sample records |
+| GET | `/api/v1/datasets/{session_id}/samples` | Retrieves RAG query bank examples |
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
 ### Frontend (Vercel)
-1. Import repository on [Vercel Dashboard](https://vercel.com/dashboard).
-2. Set **Root Directory** to `frontend`.
-3. Set Environment Variable `VITE_API_BASE_URL` to your backend URL.
-4. Click **Deploy**.
+
+1. Import the repository in the Vercel Dashboard.
+2. Set Root Directory to `frontend`.
+3. Under Environment Variables, add `VITE_API_BASE_URL` with your deployed backend URL.
+4. Deploy.
 
 ### Backend (Render / Railway / Fly.io)
+
 1. Create a new Web Service pointing to `backend/`.
 2. Build Command: `pip install -r backend/requirements.txt`
 3. Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
@@ -135,5 +160,14 @@ npm run dev
 
 ---
 
-## 📄 License
-This project is open-source and available under the [MIT License](LICENSE).
+## Security
+
+- No sensitive credentials or `.env` files are tracked in version control.
+- In-memory rate limiting restricts abusive client requests.
+- SQL guardrails restrict destructive SQL statements (`DROP`, `DELETE`, `UPDATE`, `INSERT`, `ALTER`, `TRUNCATE`).
+
+---
+
+## License
+
+This project is licensed under the MIT License.

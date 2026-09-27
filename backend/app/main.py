@@ -6,6 +6,8 @@ from app.api.v1 import api_router
 from app.services.rag_engine import get_embedding_model
 from app.services.session_manager import session_manager
 
+from app.middleware.rate_limiter import RateLimitMiddleware
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -41,6 +43,9 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Add In-Memory Rate Limiter Middleware
+    app.add_middleware(RateLimitMiddleware)
 
     # Include API Routers
     app.include_router(api_router, prefix="/api/v1")
