@@ -36,13 +36,24 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
 
-    # CORS configuration restricted to authorized frontend origins
+    # CORS configuration strictly restricted to authorized frontend origins and headers
     app.add_middleware(
         CORSMiddleware,
         allow_origins=ALLOWED_ORIGINS,
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS"],
-        allow_headers=["*"],
+        allow_headers=[
+            "Content-Type",
+            "Accept",
+            "Authorization",
+            "X-Requested-With",
+        ],
+        expose_headers=[
+            "X-RateLimit-Limit",
+            "X-RateLimit-Remaining",
+            "X-RateLimit-Reset",
+            "Retry-After",
+        ],
     )
 
     # Add In-Memory Rate Limiter Middleware
