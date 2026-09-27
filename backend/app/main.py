@@ -1,0 +1,63 @@
+import logging
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.api.v1 import api_router
+from app.services.rag_engine import get_embedding_model
+from app.services.session_manager import session_manager
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+)
+logger = logging.getLogger("TradePortfolio_Server")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifecycle events for FastAPI application."""
+    logger.info("Initializing embedding model and default session...")
+    get_embedding_model()
+    # Trigger default session initialization if data exists
+    _ = session_manager.get_session("default")
+    logger.info("Server initialization complete.")
+    yield
+    logger.info("Shutting down server...")
+
+def create_app() -> FastAPI:
+    """Factory function for FastAPI application."""
+    app = FastAPI(
+        title="Trade Portfolio & CSV Analytics Chatbot API",
+        description="Dynamic RAG-powered Natural Language to SQL engine for custom CSV analytics with Groq Llama 3.3.",
+        version="1.0.0",
+        lifespan=lifespan
+    )
+
+    # CORS configuration to allow web client integrations
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # Include API Routers
+    app.include_router(api_router, prefix="/api/v1")
+
+    @app.get("/", tags=["Root"])
+    def root():
+        return {
+            "message": "Trade Portfolio & CSV Analytics API is running",
+            "docs": "/docs",
+            "health": "/api/v1/health"
+        }
+
+    return app
+
+app = create_app()
+
+if __name__ == "__main__":
+    import uvicorn
+    from app.config import HOST, PORT
+    uvicorn.run("app.main:app", host=HOST, port=PORT, reload=True)
