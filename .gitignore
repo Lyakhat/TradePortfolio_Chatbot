@@ -41,7 +41,8 @@ pnpm-debug.log*
 # Database & Sessions
 *.db
 portfolio.db
-app/sessions/
+sessions/
+**/sessions/
 
 # Logs
 *.log

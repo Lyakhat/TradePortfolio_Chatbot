@@ -35,6 +35,9 @@ TradePortfolio_Chatbot/
 │   │   ├── utils/            # Data formatting helpers
 │   │   ├── config.py         # Application settings
 │   │   └── main.py           # FastAPI entrypoint
+│   ├── data/                 # Financial datasets & SQLite storage
+│   │   ├── holdings.csv      # Portfolio Holdings dataset
+│   │   └── trades.csv        # Historical Trades dataset
 │   ├── .env.example          # Environment variable template
 │   ├── requirements.txt      # Python dependencies
 │   └── run_server.py         # Backend development runner (port 8000)
@@ -48,11 +51,6 @@ TradePortfolio_Chatbot/
 │   ├── package.json          # Frontend dependencies
 │   ├── vercel.json           # Vercel SPA routing configuration
 │   └── vite.config.js        # Vite dev server configuration (port 5173)
-│
-├── data/                     # Financial datasets and SQLite storage
-│   ├── holdings.csv          # Portfolio Holdings dataset
-│   ├── trades.csv            # Historical Trades dataset
-│   └── portfolio.db          # SQLite database
 │
 ├── .gitignore                # Git ignore rules (node_modules, .env, *.db)
 └── README.md                 # Project documentation
