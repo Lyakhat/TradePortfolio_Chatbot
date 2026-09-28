@@ -12,8 +12,15 @@ load_dotenv(BACKEND_DIR / ".env")
 load_dotenv(PROJECT_ROOT / ".env")
 load_dotenv()
 
-# Data directory (self-contained inside backend for reliable cloud deployment)
-DATA_DIR = BACKEND_DIR / "data"
+# Data directory (robustly resolves across all cloud environments)
+candidates = [
+    BACKEND_DIR / "data",
+    PROJECT_ROOT / "backend" / "data",
+    PROJECT_ROOT / "data",
+    Path.cwd() / "data",
+    Path.cwd() / "backend" / "data",
+]
+DATA_DIR = next((p for p in candidates if (p / "holdings.csv").exists() or (p / "trades.csv").exists()), BACKEND_DIR / "data")
 SESSIONS_DIR = DATA_DIR / "sessions"
 
 # Ensure directories exist

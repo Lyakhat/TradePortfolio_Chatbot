@@ -67,8 +67,16 @@ class SessionManager:
     def get_session(self, session_id: str = "default") -> Optional[SessionContext]:
         """Retrieves an existing session by ID."""
         if session_id in self._sessions:
-            return self._sessions[session_id]
+            ctx = self._sessions[session_id]
+            # If default session exists but has 0 tables, re-run initialization
+            if session_id == "default" and len(ctx.db_manager.get_tables()) == 0:
+                self._initialize_default_session()
+            return self._sessions.get(session_id)
         
+        if session_id == "default":
+            self._initialize_default_session()
+            return self._sessions.get("default")
+
         # Check if SQLite DB file exists on disk
         db_path = SESSIONS_DIR / f"{session_id}.db"
         if db_path.exists():
