@@ -22,6 +22,7 @@ export default function App() {
   const [rawSqlInitialQuery, setRawSqlInitialQuery] = useState('');
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [previewTable, setPreviewTable] = useState({ name: '', info: null });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Initial load
   useEffect(() => {
@@ -124,13 +125,22 @@ export default function App() {
       overflow: 'hidden',
       position: 'relative'
     }}>
+      {/* Mobile Drawer Overlay */}
+      <div 
+        className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`}
+        onClick={() => setIsSidebarOpen(false)}
+      />
+
       {/* Left Studio Sidebar */}
       <Sidebar 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
         schema={schema}
         samples={samples}
         onPreviewTable={handlePreviewTable}
         health={health}
         onOpenRawSql={() => {
+          setIsSidebarOpen(false);
           setRawSqlInitialQuery('');
           setRawSqlModalOpen(true);
         }}
@@ -145,12 +155,13 @@ export default function App() {
         minWidth: 0,
         position: 'relative'
       }}>
-        {/* Header with quick chips */}
+        {/* Header with quick chips & mobile hamburger */}
         <Header 
           activeSessionId={activeSessionId}
           schema={schema}
           onSelectPrompt={handleSendMessage}
           onClearChat={handleClearChat}
+          onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
           onOpenRawSql={() => {
             setRawSqlInitialQuery('');
             setRawSqlModalOpen(true);

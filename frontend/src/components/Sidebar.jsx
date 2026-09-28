@@ -9,10 +9,13 @@ import {
   Cpu, 
   Eye, 
   Hash,
-  Type
+  Type,
+  X
 } from 'lucide-react';
 
 export default function Sidebar({ 
+  isOpen,
+  onClose,
   schema, 
   samples, 
   onPreviewTable,
@@ -30,19 +33,22 @@ export default function Sidebar({
   const tableNames = Object.keys(tables);
 
   return (
-    <aside style={{
-      width: '320px',
-      height: '100%',
-      backgroundColor: 'var(--bg-secondary)',
-      borderRight: '1px solid var(--bg-glass-border)',
-      display: 'flex',
-      flexDirection: 'column',
-      flexShrink: 0,
-      zIndex: 10,
-    }}>
+    <aside 
+      className={`sidebar-container ${isOpen ? 'open' : ''}`}
+      style={{
+        width: '320px',
+        height: '100%',
+        backgroundColor: 'var(--bg-secondary)',
+        borderRight: '1px solid var(--bg-glass-border)',
+        display: 'flex',
+        flexDirection: 'column',
+        flexShrink: 0,
+        zIndex: 10,
+      }}
+    >
       {/* Brand Header */}
       <div style={{
-        padding: '18px 20px',
+        padding: '16px 18px',
         borderBottom: '1px solid var(--bg-glass-border)',
         display: 'flex',
         alignItems: 'center',
@@ -73,14 +79,26 @@ export default function Sidebar({
           </div>
         </div>
 
-        <button 
-          onClick={onOpenRawSql}
-          title="Open SQL Workbench"
-          className="btn btn-ghost"
-          style={{ padding: '6px', borderRadius: 'var(--radius-sm)' }}
-        >
-          <Cpu size={16} color="var(--cyan-primary)" />
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <button 
+            onClick={onOpenRawSql}
+            title="Open SQL Workbench"
+            className="btn btn-ghost"
+            style={{ padding: '6px', borderRadius: 'var(--radius-sm)' }}
+          >
+            <Cpu size={16} color="var(--cyan-primary)" />
+          </button>
+          
+          {/* Mobile Close Button */}
+          <button 
+            onClick={onClose}
+            title="Close Sidebar"
+            className="btn btn-ghost mobile-only-btn"
+            style={{ padding: '6px', borderRadius: 'var(--radius-sm)' }}
+          >
+            <X size={18} color="var(--text-secondary)" />
+          </button>
+        </div>
       </div>
 
       {/* Dataset Context Bar */}
@@ -181,6 +199,7 @@ export default function Sidebar({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
+                            if (onClose) onClose();
                             onPreviewTable(tableName, tableInfo);
                           }}
                           title="Preview Table Data"

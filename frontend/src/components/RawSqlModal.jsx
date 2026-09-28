@@ -57,43 +57,53 @@ export default function RawSqlModal({ isOpen, onClose, sessionId, initialQuery =
     : [];
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.75)',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 50,
-      padding: '24px'
-    }}>
-      <div className="glass-card animate-fade-in-up" style={{
-        width: '100%',
-        maxWidth: '900px',
-        maxHeight: '90vh',
-        backgroundColor: 'var(--bg-secondary)',
-        border: '1px solid var(--bg-glass-border)',
-        borderRadius: 'var(--radius-xl)',
+    <div 
+      className="modal-wrapper"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
-      }}>
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 50,
+        padding: '20px'
+      }}
+    >
+      <div 
+        className="glass-card animate-fade-in-up modal-container" 
+        style={{
+          width: '100%',
+          maxWidth: '900px',
+          maxHeight: '90vh',
+          backgroundColor: 'var(--bg-secondary)',
+          border: '1px solid var(--bg-glass-border)',
+          borderRadius: 'var(--radius-xl)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
+        }}
+      >
         
         {/* Modal Header */}
-        <div style={{
-          padding: '16px 20px',
-          borderBottom: '1px solid var(--bg-glass-border)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'var(--bg-tertiary)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Terminal size={18} color="var(--cyan-primary)" />
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFF' }}>SQL Workbench</h3>
-            <span className="badge badge-cyan">Session: {sessionId}</span>
+        <div 
+          className="modal-header"
+          style={{
+            padding: '14px 18px',
+            borderBottom: '1px solid var(--bg-glass-border)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'var(--bg-tertiary)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <Terminal size={18} color="var(--cyan-primary)" style={{ flexShrink: 0 }} />
+            <h3 style={{ fontSize: '0.96rem', fontWeight: 700, color: '#FFF' }}>SQL Workbench</h3>
+            <span className="badge badge-cyan" style={{ fontSize: '0.65rem' }}>Session: {sessionId}</span>
           </div>
 
           <button 
@@ -106,7 +116,16 @@ export default function RawSqlModal({ isOpen, onClose, sessionId, initialQuery =
         </div>
 
         {/* Modal Body */}
-        <div style={{ padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div 
+          className="modal-body"
+          style={{ 
+            padding: '18px', 
+            overflowY: 'auto', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '14px' 
+          }}
+        >
           
           {/* SQL Editor Box */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

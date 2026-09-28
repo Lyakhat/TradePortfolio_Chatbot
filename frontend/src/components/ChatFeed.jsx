@@ -20,28 +20,32 @@ import {
 
 export default function ChatFeed({ messages, isLoading, onOpenRawSqlWithQuery }) {
   return (
-    <div style={{
-      flex: 1,
-      overflowY: 'auto',
-      padding: '24px 32px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '24px',
-    }}>
+    <div 
+      className="chat-feed-container"
+      style={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: '20px 28px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
+      }}
+    >
       {messages.length === 0 && (
         <div style={{
           margin: 'auto',
           maxWidth: '560px',
           textAlign: 'center',
-          padding: '40px 20px',
+          padding: '30px 16px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '16px'
+          gap: '16px',
+          width: '100%'
         }}>
           <div style={{
-            width: '56px',
-            height: '56px',
+            width: '52px',
+            height: '52px',
             borderRadius: 'var(--radius-xl)',
             background: 'linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(6,182,212,0.2) 100%)',
             border: '1px solid rgba(16,185,129,0.3)',
@@ -50,26 +54,29 @@ export default function ChatFeed({ messages, isLoading, onOpenRawSqlWithQuery })
             justifyContent: 'center',
             boxShadow: '0 0 30px rgba(16,185,129,0.15)'
           }}>
-            <Sparkles size={28} color="var(--emerald-primary)" />
+            <Sparkles size={26} color="var(--emerald-primary)" />
           </div>
 
           <div>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#FFF', letterSpacing: '-0.02em' }}>
+            <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#FFF', letterSpacing: '-0.02em' }}>
               Welcome to TradePulse AI
             </h2>
-            <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', marginTop: '6px', lineHeight: '1.5' }}>
-              Ask any natural language question to query your portfolio holdings and trades. The engine dynamically constructs safe SQL, executes it, and displays interactive tables.
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '6px', lineHeight: '1.5' }}>
+              Ask any question to query your portfolio holdings and trades. The engine dynamically constructs safe SQL, executes it, and displays interactive tables.
             </p>
           </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '10px',
-            width: '100%',
-            marginTop: '12px',
-            textAlign: 'left'
-          }}>
+          <div 
+            className="welcome-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '10px',
+              width: '100%',
+              marginTop: '10px',
+              textAlign: 'left'
+            }}
+          >
             <div className="glass-card" style={{ padding: '12px 14px' }}>
               <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--emerald-primary)', display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <ShieldCheck size={14} /> Safe & Read-Only
@@ -102,12 +109,12 @@ export default function ChatFeed({ messages, isLoading, onOpenRawSqlWithQuery })
       {isLoading && (
         <div className="animate-fade-in-up" style={{
           display: 'flex',
-          gap: '14px',
+          gap: '12px',
           maxWidth: '85%',
         }}>
           <div style={{
-            width: '32px',
-            height: '32px',
+            width: '30px',
+            height: '30px',
             borderRadius: 'var(--radius-md)',
             background: 'var(--bg-elevated)',
             border: '1px solid var(--bg-glass-border)',
@@ -116,12 +123,12 @@ export default function ChatFeed({ messages, isLoading, onOpenRawSqlWithQuery })
             justifyContent: 'center',
             flexShrink: 0
           }}>
-            <Bot size={18} color="var(--emerald-primary)" />
+            <Bot size={16} color="var(--emerald-primary)" />
           </div>
 
-          <div className="glass-card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="glass-card" style={{ padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span className="pulse-dot pulse-dot-emerald" />
-            <span style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
               Analyzing portfolio data and preparing results...
             </span>
           </div>
@@ -146,27 +153,31 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
 
   if (isUser) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        gap: '12px',
-        alignSelf: 'flex-end',
-        maxWidth: '80%',
-      }}>
+      <div 
+        className="message-bubble-wrapper"
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: '10px',
+          alignSelf: 'flex-end',
+          maxWidth: '85%',
+        }}
+      >
         <div style={{
           backgroundColor: 'var(--bg-elevated)',
           border: '1px solid rgba(255,255,255,0.12)',
           borderRadius: 'var(--radius-lg) var(--radius-lg) 2px var(--radius-lg)',
-          padding: '12px 18px',
+          padding: '10px 16px',
           color: '#FFF',
-          fontSize: '0.9rem',
+          fontSize: '0.88rem',
+          lineHeight: '1.45',
           boxShadow: 'var(--shadow-md)'
         }}>
           {message.content}
         </div>
         <div style={{
-          width: '32px',
-          height: '32px',
+          width: '30px',
+          height: '30px',
           borderRadius: 'var(--radius-md)',
           background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
           display: 'flex',
@@ -174,7 +185,7 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
           justifyContent: 'center',
           flexShrink: 0
         }}>
-          <User size={16} color="#FFF" />
+          <User size={15} color="#FFF" />
         </div>
       </div>
     );
@@ -190,16 +201,19 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
   const isSingleValue = isSuccess && data && data.length === 1 && columns && columns.length === 1;
 
   return (
-    <div className="animate-fade-in-up" style={{
-      display: 'flex',
-      gap: '14px',
-      maxWidth: '92%',
-      alignSelf: 'flex-start',
-      width: '100%'
-    }}>
+    <div 
+      className="animate-fade-in-up message-bubble-wrapper" 
+      style={{
+        display: 'flex',
+        gap: '12px',
+        maxWidth: '96%',
+        alignSelf: 'flex-start',
+        width: '100%'
+      }}
+    >
       <div style={{
-        width: '32px',
-        height: '32px',
+        width: '30px',
+        height: '30px',
         borderRadius: 'var(--radius-md)',
         background: 'linear-gradient(135deg, #10B981 0%, #06B6D4 100%)',
         display: 'flex',
@@ -208,25 +222,25 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
         flexShrink: 0,
         boxShadow: '0 0 12px rgba(16, 185, 129, 0.3)'
       }}>
-        <Bot size={18} color="#041B11" />
+        <Bot size={16} color="#041B11" />
       </div>
 
-      <div className="glass-card" style={{ flex: 1, padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <div className="glass-card" style={{ flex: 1, minWidth: 0, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         
         {/* Status Bar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             {isError && <span className="badge badge-amber">Query Error</span>}
             {isSecurityViolation && <span className="badge badge-rose">Query Blocked</span>}
 
             {row_count !== undefined && row_count !== null && (
-              <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#FFF', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ fontSize: '0.76rem', fontWeight: 600, color: '#FFF', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                 Total Rows: <span style={{ color: 'var(--emerald-primary)', fontFamily: 'var(--font-mono)' }}>{row_count.toLocaleString()}</span>
               </span>
             )}
 
             {execution_time_ms && (
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                 • <Clock size={11} /> {execution_time_ms}ms
               </span>
             )}
@@ -236,7 +250,7 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
             <button
               onClick={() => setShowSql(!showSql)}
               className="btn btn-ghost"
-              style={{ fontSize: '0.74rem', padding: '3px 8px', gap: '4px' }}
+              style={{ fontSize: '0.72rem', padding: '3px 6px', gap: '4px' }}
             >
               <Terminal size={12} color="var(--cyan-primary)" />
               {showSql ? 'Hide SQL' : 'View SQL'}
@@ -251,10 +265,10 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
             background: 'var(--bg-primary)',
             border: '1px solid var(--bg-glass-border)',
             borderRadius: 'var(--radius-md)',
-            padding: '10px 14px',
+            padding: '10px 12px',
             position: 'relative'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
               <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                 Generated SQL Query
               </span>
@@ -264,14 +278,14 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
                   onClick={() => onOpenRawSqlWithQuery(sql)}
                   className="btn btn-ghost"
                   title="Open in SQL Workbench"
-                  style={{ padding: '3px 6px', fontSize: '0.7rem', gap: '4px' }}
+                  style={{ padding: '2px 6px', fontSize: '0.7rem', gap: '4px' }}
                 >
                   <ExternalLink size={11} /> Open in Workbench
                 </button>
                 <button
                   onClick={handleCopySql}
                   className="btn btn-secondary"
-                  style={{ padding: '3px 8px', fontSize: '0.7rem', gap: '4px' }}
+                  style={{ padding: '2px 8px', fontSize: '0.7rem', gap: '4px' }}
                 >
                   {copied ? <Check size={11} color="var(--emerald-primary)" /> : <Copy size={11} />}
                   {copied ? 'Copied' : 'Copy'}
@@ -281,7 +295,7 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
 
             <pre style={{
               margin: 0,
-              fontSize: '0.8rem',
+              fontSize: '0.78rem',
               fontFamily: 'var(--font-mono)',
               color: 'var(--cyan-primary)',
               overflowX: 'auto',
@@ -302,12 +316,12 @@ function MessageBubble({ message, onOpenRawSqlWithQuery }) {
           )
         ) : (
           <div style={{
-            padding: '12px 14px',
+            padding: '10px 12px',
             background: isSecurityViolation ? 'var(--rose-surface)' : 'var(--bg-tertiary)',
             border: `1px solid ${isSecurityViolation ? 'rgba(244,63,94,0.3)' : 'var(--bg-glass-border)'}`,
             borderRadius: 'var(--radius-md)',
             color: isSecurityViolation ? 'var(--rose-primary)' : 'var(--text-secondary)',
-            fontSize: '0.86rem',
+            fontSize: '0.84rem',
             lineHeight: '1.5'
           }}>
             {error_message || formatted_answer || 'No answer available.'}
@@ -330,16 +344,16 @@ function ScalarMetricCard({ data, columns, formatted }) {
       background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
       border: '1px solid rgba(255,255,255,0.1)',
       borderRadius: 'var(--radius-lg)',
-      padding: '18px 22px',
+      padding: '16px 20px',
       display: 'flex',
       flexDirection: 'column',
       gap: '4px'
     }}>
-      <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
         {formatColumnHeader(colName)}
       </span>
       <div style={{
-        fontSize: '2rem',
+        fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
         fontWeight: 800,
         fontFamily: 'var(--font-mono)',
         letterSpacing: '-0.03em',
@@ -606,8 +620,8 @@ function InteractiveDataTable({ data, columns }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       {/* Table Toolbar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-        <div style={{ position: 'relative', flex: 1, maxWidth: '280px' }}>
+      <div className="table-toolbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: '180px', maxWidth: '320px' }}>
           <Search size={13} color="var(--text-muted)" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
           <input 
             type="text"
@@ -627,7 +641,7 @@ function InteractiveDataTable({ data, columns }) {
           />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexShrink: 0 }}>
           <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
             Total Rows: <span style={{ color: 'var(--emerald-primary)', fontFamily: 'var(--font-mono)' }}>{sortedData.length}</span>
           </span>

@@ -47,27 +47,34 @@ export default function PromptInput({
   };
 
   return (
-    <div style={{
-      padding: '16px 32px 24px',
-      background: 'linear-gradient(180deg, transparent 0%, var(--bg-primary) 100%)',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '8px',
-      position: 'relative'
-    }}>
+    <div 
+      className="prompt-input-wrapper"
+      style={{
+        padding: '12px 24px 20px',
+        background: 'linear-gradient(180deg, transparent 0%, var(--bg-primary) 100%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '8px',
+        position: 'relative',
+        width: '100%'
+      }}
+    >
       
       {/* Settings Popover */}
       {showSettings && (
-        <div className="glass-card animate-fade-in-up" style={{
-          position: 'absolute',
-          bottom: '80px',
-          right: '32px',
-          width: '280px',
-          padding: '16px',
-          zIndex: 20,
-          boxShadow: 'var(--shadow-lg)'
-        }}>
+        <div 
+          className="glass-card animate-fade-in-up settings-popover" 
+          style={{
+            position: 'absolute',
+            bottom: '76px',
+            right: '24px',
+            width: '280px',
+            padding: '16px',
+            zIndex: 20,
+            boxShadow: 'var(--shadow-lg)'
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
             <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#FFF' }}>Model & RAG Settings</span>
             <button 
@@ -83,7 +90,7 @@ export default function PromptInput({
             {/* Temperature Slider */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
-                <span>Temperature (Strict SQL vs Creative)</span>
+                <span>Temperature (Strict vs Creative)</span>
                 <strong style={{ color: 'var(--emerald-primary)', fontFamily: 'var(--font-mono)' }}>{temperature}</strong>
               </div>
               <input 
@@ -120,16 +127,17 @@ export default function PromptInput({
       {/* Main Glass Input Bar */}
       <form 
         onSubmit={handleSubmit}
+        className="prompt-input-form"
         style={{
           width: '100%',
           maxWidth: '860px',
           backgroundColor: 'var(--bg-tertiary)',
           border: '1px solid var(--bg-glass-border)',
           borderRadius: 'var(--radius-xl)',
-          padding: '8px 12px 8px 18px',
+          padding: '8px 12px 8px 16px',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
+          gap: '10px',
           boxShadow: '0 8px 24px -4px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
           transition: 'all var(--transition-smooth)'
         }}
@@ -142,14 +150,14 @@ export default function PromptInput({
           value={input}
           onChange={handleTextChange}
           onKeyDown={handleKeyDown}
-          placeholder="Ask anything about your portfolio or trades (e.g. 'Show top 5 holdings by value')..."
+          placeholder="Ask anything about portfolio holdings or trades..."
           style={{
             flex: 1,
             background: 'transparent',
             border: 'none',
             outline: 'none',
             color: '#FFF',
-            fontSize: '0.9rem',
+            fontSize: '0.88rem',
             fontFamily: 'var(--font-body)',
             resize: 'none',
             padding: '6px 0',
@@ -157,13 +165,13 @@ export default function PromptInput({
           }}
         />
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
           <button 
             type="button"
             onClick={() => setShowSettings(!showSettings)}
             className={`btn ${showSettings ? 'btn-secondary' : 'btn-ghost'}`}
             title="Adjust Temperature & RAG parameters"
-            style={{ padding: '8px' }}
+            style={{ padding: '7px' }}
           >
             <SlidersHorizontal size={15} color={showSettings ? 'var(--cyan-primary)' : 'currentColor'} />
           </button>
@@ -172,7 +180,7 @@ export default function PromptInput({
             type="submit"
             disabled={!input.trim() || isLoading}
             className="btn btn-primary"
-            style={{ padding: '8px 14px', borderRadius: 'var(--radius-md)', gap: '6px' }}
+            style={{ padding: '7px 12px', borderRadius: 'var(--radius-md)', gap: '4px' }}
           >
             <span style={{ fontSize: '0.82rem' }}>Send</span>
             <CornerDownLeft size={13} />
@@ -180,10 +188,10 @@ export default function PromptInput({
         </div>
       </form>
 
-      <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', display: 'flex', gap: '8px', alignItems: 'center' }}>
-        <span>Press <strong style={{ color: 'var(--text-secondary)' }}>Enter ↵</strong> to run query</span>
-        <span>•</span>
-        <span><strong style={{ color: 'var(--text-secondary)' }}>Shift + Enter</strong> for new line</span>
+      <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', display: 'flex', gap: '8px', alignItems: 'center', textAlign: 'center' }}>
+        <span>Press <strong style={{ color: 'var(--text-secondary)' }}>Enter ↵</strong> to run</span>
+        <span className="desktop-only">•</span>
+        <span className="desktop-only"><strong style={{ color: 'var(--text-secondary)' }}>Shift + Enter</strong> for new line</span>
       </div>
     </div>
   );
