@@ -43,18 +43,14 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
 
-    # CORS configuration strictly restricted to authorized frontend origins and headers
+    # CORS configuration allowing your Vercel frontend domain and localhost
     app.add_middleware(
         CORSMiddleware,
         allow_origins=ALLOWED_ORIGINS,
+        allow_origin_regex=r"https://.*\.vercel\.app",
         allow_credentials=True,
-        allow_methods=["GET", "POST", "OPTIONS"],
-        allow_headers=[
-            "Content-Type",
-            "Accept",
-            "Authorization",
-            "X-Requested-With",
-        ],
+        allow_methods=["*"],
+        allow_headers=["*"],
         expose_headers=[
             "X-RateLimit-Limit",
             "X-RateLimit-Remaining",
