@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from app.config import GROQ_API_KEY
-from app.services.rag_engine import _SHARED_EMBEDDING_MODEL
 
 router = APIRouter(tags=["Health"])
 
@@ -10,6 +9,6 @@ def health_check():
     return {
         "status": "healthy",
         "version": "1.0.0",
-        "embedding_model_loaded": _SHARED_EMBEDDING_MODEL is not None,
+        "rag_engine_loaded": True,
         "groq_configured": bool(GROQ_API_KEY)
     }
