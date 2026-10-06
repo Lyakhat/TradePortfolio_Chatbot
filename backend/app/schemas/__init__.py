@@ -12,6 +12,16 @@ from app.schemas.chat import (
     RawSqlResponse,
 )
 
+from app.schemas.auth import (
+    RegisterRequest,
+    LoginRequest,
+    UserInfo,
+    AuthResponse,
+    CheckEmailResponse,
+    LogoutResponse,
+    BlacklistedTokensResponse,
+)
+
 __all__ = [
     "TableInfo",
     "DatasetUploadResponse",
@@ -22,4 +32,12 @@ __all__ = [
     "ChatQueryResponse",
     "RawSqlRequest",
     "RawSqlResponse",
+    "RegisterRequest",
+    "LoginRequest",
+    "UserInfo",
+    "AuthResponse",
+    "CheckEmailResponse",
+    "LogoutResponse",
+    "BlacklistedTokensResponse",
 ]
+

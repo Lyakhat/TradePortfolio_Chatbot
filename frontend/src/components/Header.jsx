@@ -4,7 +4,9 @@ import {
   Terminal, 
   Trash2, 
   Zap, 
-  Menu
+  Menu,
+  LogOut,
+  UserCheck
 } from 'lucide-react';
 
 const PRESET_QUERIES = [
@@ -20,6 +22,8 @@ const PRESET_QUERIES = [
 export default function Header({ 
   activeSessionId, 
   schema, 
+  currentUser,
+  onLogout,
   onSelectPrompt, 
   onClearChat, 
   onToggleSidebar,
@@ -78,8 +82,30 @@ export default function Header({
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons & User Profile & Logout */}
         <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+          
+          {/* Active User Badge */}
+          {currentUser && (
+            <div 
+              className="desktop-only"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 10px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid var(--bg-glass-border)',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.76rem',
+                color: 'var(--text-primary)'
+              }}
+            >
+              <UserCheck size={13} color="var(--emerald-primary)" />
+              <span style={{ fontWeight: 600 }}>{currentUser.name}</span>
+            </div>
+          )}
+
           <button 
             onClick={onOpenRawSql}
             className="btn btn-secondary"
@@ -97,6 +123,37 @@ export default function Header({
             style={{ padding: '6px 8px', fontSize: '0.78rem' }}
           >
             <Trash2 size={15} />
+          </button>
+
+          {/* Requirement 4: On main page add a logout icon whenever user wants to logout */}
+          <button
+            onClick={onLogout}
+            className="btn btn-ghost"
+            title="Sign out & revoke token"
+            style={{
+              padding: '6px 10px',
+              fontSize: '0.78rem',
+              color: 'var(--rose-primary)',
+              backgroundColor: 'var(--rose-surface)',
+              border: '1px solid rgba(244, 63, 94, 0.25)',
+              borderRadius: 'var(--radius-md)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              cursor: 'pointer',
+              transition: 'all var(--transition-fast)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(244, 63, 94, 0.25)';
+              e.currentTarget.style.borderColor = 'var(--rose-primary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--rose-surface)';
+              e.currentTarget.style.borderColor = 'rgba(244, 63, 94, 0.25)';
+            }}
+          >
+            <LogOut size={15} color="var(--rose-primary)" />
+            <span className="desktop-only" style={{ fontWeight: 600 }}>Logout</span>
           </button>
         </div>
       </div>

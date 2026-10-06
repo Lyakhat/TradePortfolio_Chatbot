@@ -40,9 +40,12 @@ pnpm-debug.log*
 
 # Database & Sessions
 *.db
+*.sqlite
+*.sqlite3
 portfolio.db
 sessions/
 **/sessions/
+
 
 # Logs
 *.log

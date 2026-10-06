@@ -10,7 +10,9 @@ import {
   Eye, 
   Hash,
   Type,
-  X
+  X,
+  LogOut,
+  UserCheck
 } from 'lucide-react';
 
 export default function Sidebar({ 
@@ -20,8 +22,11 @@ export default function Sidebar({
   samples, 
   onPreviewTable,
   health,
-  onOpenRawSql
+  onOpenRawSql,
+  currentUser,
+  onLogout
 }) {
+
   const [activeTab, setActiveTab] = useState('schema'); // 'schema' | 'rag'
   const [expandedTables, setExpandedTables] = useState({ holdings: true, trades: false });
 
@@ -307,11 +312,71 @@ export default function Sidebar({
 
       </div>
 
+      {/* User Profile & Logout Bar */}
+      {currentUser && (
+        <div style={{
+          padding: '10px 14px',
+          borderTop: '1px solid var(--bg-glass-border)',
+          background: 'rgba(0,0,0,0.25)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '8px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <div style={{
+              width: '26px',
+              height: '26px',
+              borderRadius: '50%',
+              background: 'var(--emerald-surface)',
+              border: '1px solid var(--emerald-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
+              <UserCheck size={14} color="var(--emerald-primary)" />
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 600, color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {currentUser.name}
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {currentUser.email}
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={onLogout}
+            title="Sign out & revoke token"
+            style={{
+              background: 'var(--rose-surface)',
+              border: '1px solid rgba(244, 63, 94, 0.3)',
+              color: 'var(--rose-primary)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '5px 8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              flexShrink: 0,
+              transition: 'all var(--transition-fast)'
+            }}
+          >
+            <LogOut size={12} />
+            <span>Logout</span>
+          </button>
+        </div>
+      )}
+
       {/* Footer System Heartbeat */}
       <div style={{
-        padding: '12px 16px',
+        padding: '10px 16px',
         borderTop: '1px solid var(--bg-glass-border)',
-        background: 'rgba(0,0,0,0.2)',
+        background: 'rgba(0,0,0,0.3)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -330,3 +395,4 @@ export default function Sidebar({
     </aside>
   );
 }
+

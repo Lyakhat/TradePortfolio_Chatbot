@@ -36,7 +36,14 @@ HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", 8000))
 RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE", 30))
 
+# JWT Authentication & Token Blacklist Settings
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "trade-portfolio-jwt-secret-key-9283471029384719238471")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRE_MINUTES", 60 * 24 * 7))  # 7 days
+AUTH_DB_PATH = DATA_DIR / "auth.sqlite"
+
 # CORS Allowed Origins (restricted to own frontend endpoints)
 default_origins = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,https://trade-portfolio-chatbot-mauve.vercel.app"
 raw_origins = os.getenv("ALLOWED_ORIGINS", default_origins)
 ALLOWED_ORIGINS = [origin.strip() for origin in raw_origins.split(",") if origin.strip()]
+

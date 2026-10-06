@@ -5,10 +5,24 @@ import ChatFeed from './components/ChatFeed';
 import PromptInput from './components/PromptInput';
 import RawSqlModal from './components/RawSqlModal';
 import TablePreviewModal from './components/TablePreviewModal';
-import { fetchHealth, fetchSchema, fetchSamples, askQuestion } from './api/client';
+import AuthPage from './components/AuthPage';
+import { 
+  fetchHealth, 
+  fetchSchema, 
+  fetchSamples, 
+  askQuestion,
+  getAuthToken,
+  getStoredUser,
+  fetchCurrentUser,
+  logoutUser
+} from './api/client';
 
 export default function App() {
   const activeSessionId = 'default';
+  const [currentUser, setCurrentUser] = useState(() => getStoredUser());
+  const [authToken, setAuthTokenState] = useState(() => getAuthToken());
+  const [isVerifyingAuth, setIsVerifyingAuth] = useState(true);
+
   const [schema, setSchema] = useState(null);
   const [samples, setSamples] = useState(null);
   const [health, setHealth] = useState(null);
@@ -24,11 +38,37 @@ export default function App() {
   const [previewTable, setPreviewTable] = useState({ name: '', info: null });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Initial load
+  // Check and verify token on initial load
   useEffect(() => {
-    loadSessionData(activeSessionId);
-    loadHealth();
-  }, [activeSessionId]);
+    const verifyInitialSession = async () => {
+      const token = getAuthToken();
+      if (token) {
+        try {
+          const user = await fetchCurrentUser();
+          setCurrentUser(user);
+          setAuthTokenState(token);
+        } catch (err) {
+          console.warn('Initial session verification failed or token blacklisted:', err);
+          setCurrentUser(null);
+          setAuthTokenState(null);
+        }
+      } else {
+        setCurrentUser(null);
+        setAuthTokenState(null);
+      }
+      setIsVerifyingAuth(false);
+    };
+
+    verifyInitialSession();
+  }, []);
+
+  // Load session data when authenticated
+  useEffect(() => {
+    if (authToken && currentUser) {
+      loadSessionData(activeSessionId);
+      loadHealth();
+    }
+  }, [authToken, currentUser, activeSessionId]);
 
   const loadHealth = async () => {
     try {
@@ -49,6 +89,24 @@ export default function App() {
       setSamples(samplesData);
     } catch (err) {
       console.error('Failed to load session metadata:', err);
+    }
+  };
+
+  const handleAuthSuccess = (user, token) => {
+    setCurrentUser(user);
+    setAuthTokenState(token);
+  };
+
+  // Requirement 4 & 5: Logout handling with token revocation & blacklisting
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      setCurrentUser(null);
+      setAuthTokenState(null);
+      setMessages([]);
     }
   };
 
@@ -90,6 +148,11 @@ export default function App() {
         fetchSamples(activeSessionId).then(setSamples).catch(() => {});
       }
     } catch (err) {
+      if (err.message?.includes('401') || err.message?.includes('revoked') || err.message?.includes('expired')) {
+        handleLogout();
+        return;
+      }
+
       const errorMsg = {
         role: 'assistant',
         execution_status: 'error',
@@ -116,6 +179,32 @@ export default function App() {
     setMessages([]);
   };
 
+  // Brief initial loading screen during token check
+  if (isVerifyingAuth) {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'var(--bg-primary)',
+        color: 'var(--text-muted)',
+        fontSize: '0.9rem'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+          <div className="pulse-dot pulse-dot-emerald" style={{ width: '12px', height: '12px' }} />
+          <span>Initializing TradePulse Workspace...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Requirement 2: Whenever user visits first time, Register Page should appear
+  if (!authToken || !currentUser) {
+    return <AuthPage onAuthSuccess={handleAuthSuccess} />;
+  }
+
   return (
     <div style={{
       display: 'flex',
@@ -139,6 +228,8 @@ export default function App() {
         samples={samples}
         onPreviewTable={handlePreviewTable}
         health={health}
+        currentUser={currentUser}
+        onLogout={handleLogout}
         onOpenRawSql={() => {
           setIsSidebarOpen(false);
           setRawSqlInitialQuery('');
@@ -155,10 +246,12 @@ export default function App() {
         minWidth: 0,
         position: 'relative'
       }}>
-        {/* Header with quick chips & mobile hamburger */}
+        {/* Header with quick chips, mobile hamburger & Logout Icon */}
         <Header 
           activeSessionId={activeSessionId}
           schema={schema}
+          currentUser={currentUser}
+          onLogout={handleLogout}
           onSelectPrompt={handleSendMessage}
           onClearChat={handleClearChat}
           onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
